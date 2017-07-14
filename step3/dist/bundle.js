@@ -79,7 +79,17 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var app = new _vue2.default({
     el: '#app',
     data: {
-        message: 'Hello xyt!'
+        newTodo: '',
+        todoList: []
+    },
+    created: function created() {
+        var _this = this;
+
+        var i = 0;
+        setInterval(function () {
+            _this.newTodo = i; // this.newTodo 就是 data.newTodo，实际上 this.newTodo 是 data.newTodo 的代理
+            i += 1;
+        }, 1000);
     }
 });
 
