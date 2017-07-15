@@ -89,7 +89,7 @@ var app = new _vue2.default({
             //当窗口即将被卸载时,会触发该事件
             var dataString = JSON.stringify(_this.todoList);
             var newTodoValue = JSON.stringify(_this.newTodo);
-            window.localStorage.setItem('myTodos', dataString);
+            window.localStorage.setItem('myTodos', dataString); //存储输入款内容
             window.localStorage.setItem('todoInputValue', newTodoValue);
         };
         var todoInputValue = window.localStorage.getItem('todoInputValue');
@@ -98,7 +98,7 @@ var app = new _vue2.default({
         var oldDataString = window.localStorage.getItem('myTodos'); //取出数据
         var oldData = JSON.parse(oldDataString); //转化成JSON格式
         this.todoList = oldData || []; // 如果没有oldData则默认为空数组
-        this.newTodo = todoInputData || '';
+        this.newTodo = todoInputData || ''; //为输入框添加上一次未提交的内容
     },
     methods: {
         addTodo: function addTodo() {
