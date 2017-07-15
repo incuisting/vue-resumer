@@ -82,14 +82,19 @@ var app = new _vue2.default({
         newTodo: '',
         todoList: []
     },
-    created: function created() {
-        var _this = this;
-
-        var i = 0;
-        setInterval(function () {
-            _this.newTodo = i; // this.newTodo 就是 data.newTodo，实际上 this.newTodo 是 data.newTodo 的代理
-            i += 1;
-        }, 1000);
+    methods: {
+        addTodo: function addTodo() {
+            this.todoList.push({ //this 被指向data
+                title: this.newTodo,
+                createAt: new Date(),
+                done: false
+            });
+            this.newTodo = ''; //变成空
+        },
+        removeTodo: function removeTodo(todo) {
+            var index = this.todoList.indexOf(todo);
+            this.todoList.splice(index, 1);
+        }
     }
 });
 

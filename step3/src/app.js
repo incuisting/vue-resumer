@@ -5,13 +5,18 @@ var app = new Vue({
         newTodo: '',
         todoList: []
     },
-    methods:{
-        addTodo:function () {
-            this.todoList.push({
-                title:this.newTodo,
-                createAt:new Date()
+    methods: {
+        addTodo: function () {
+            this.todoList.push({  //this 被指向data
+                title: this.newTodo,
+                createAt: new Date(),
+                done: false
             })
-            console.log(this.todoList)
+            this.newTodo = '' //变成空
+        },
+        removeTodo: function (todo) {
+            let index = this.todoList.indexOf(todo)
+            this.todoList.splice(index, 1)
         }
     }
 })
