@@ -97,6 +97,7 @@ var app = new _vue2.default({
         console.log('todoInputValue', todoInputValue);
         var oldDataString = window.localStorage.getItem('myTodos'); //取出数据
         var oldData = JSON.parse(oldDataString); //转化成JSON格式
+
         console.log('oldData.createAt', oldData[0].createAt);
         this.todoList = oldData || []; // 如果没有oldData则默认为空数组
         this.newTodo = todoInputData || ''; //为输入框添加上一次未提交的内容
@@ -115,6 +116,9 @@ var app = new _vue2.default({
             var index = this.todoList.indexOf(todo);
             this.todoList.splice(index, 1);
         }
+        //TODO
+        //在addTodo的时候就把时间的格式转化好
+        //尝试createAt直接指向一个methods
     }
 });
 
