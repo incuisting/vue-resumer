@@ -18,7 +18,8 @@ var app = new Vue({
             password: ''
         },
         newTodo: '',
-        todoList: []
+        todoList: [],
+        currentUser: null
     },
     created: function() {
         window.onbeforeunload = () => { //当窗口即将被卸载时,会触发该事件
@@ -53,19 +54,29 @@ var app = new Vue({
         //TODO
         //在addTodo的时候就把时间的格式转化好
         //尝试createAt直接指向一个methods
-        signUp: function() {
+        signUp: function() { //注册
             let user = new AV.User();
             user.setUsername(this.formData.username);
             user.setPassword(this.formData.password);
-            user.signUp().then(function(loginedUser) {
-                console.log(loginedUser);
-            }, function(error) {});
+            user.signUp().then((loginedUser) => {
+                this.currentUser = this.getCurrentUser()
+            }, (error) => {
+                alert('注册失败')
+            });
         },
-        login: function() {
-            AV.User.logIn(this.formData.username, this.formData.password).then(function(loginedUser) {
-                console.log(loginedUser);
-            }, function(error) {});
+        login: function() { //登入
+            AV.User.logIn(this.formData.username, this.formData.password).then((loginedUser) => {
+                this.currentUser = this.getCurrentUser()
+            }, (error) => {
+                alert('注册成功')
+            });
+        },
+        getCurrentUser: function() {
+            let { id, createAt, attributes: { username } } = AV.User.current()
+                //使用了ES6的解构赋值
+            return { id, username, createAt } //
         }
+
     }
 
 })

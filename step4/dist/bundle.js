@@ -287,7 +287,8 @@ var app = new _vue2.default({
             password: ''
         },
         newTodo: '',
-        todoList: []
+        todoList: [],
+        currentUser: null
     },
     created: function created() {
         var _this = this;
@@ -326,18 +327,40 @@ var app = new _vue2.default({
         //在addTodo的时候就把时间的格式转化好
         //尝试createAt直接指向一个methods
         signUp: function signUp() {
+            var _this2 = this;
+
+            //注册
             var user = new _leancloudStorage2.default.User();
             user.setUsername(this.formData.username);
             user.setPassword(this.formData.password);
             user.signUp().then(function (loginedUser) {
-                console.log(loginedUser);
-            }, function (error) {});
+                _this2.currentUser = _this2.getCurrentUser();
+            }, function (error) {
+                alert('注册失败');
+            });
         },
         login: function login() {
+            var _this3 = this;
+
+            //登入
             _leancloudStorage2.default.User.logIn(this.formData.username, this.formData.password).then(function (loginedUser) {
-                console.log(loginedUser);
-            }, function (error) {});
+                _this3.currentUser = _this3.getCurrentUser();
+            }, function (error) {
+                alert('注册成功');
+            });
+        },
+        getCurrentUser: function getCurrentUser() {
+            var _AV$User$current = _leancloudStorage2.default.User.current(),
+                id = _AV$User$current.id,
+                createAt = _AV$User$current.createAt,
+                username = _AV$User$current.attributes.username;
+            //使用了ES6的解构赋值
+
+
+            return { id: id, username: username, createAt: createAt //
+            };
         }
+
     }
 
 });
