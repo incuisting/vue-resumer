@@ -75,6 +75,11 @@ var app = new Vue({
             let { id, createAt, attributes: { username } } = AV.User.current()
                 //使用了ES6的解构赋值
             return { id, username, createAt } //
+        },
+        logout: function() {
+            AV.User.logOut()
+            this.currentUser = null
+            window.location.reload()
         }
 
     }

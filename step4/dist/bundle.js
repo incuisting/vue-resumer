@@ -359,6 +359,11 @@ var app = new _vue2.default({
 
             return { id: id, username: username, createAt: createAt //
             };
+        },
+        logout: function logout() {
+            _leancloudStorage2.default.User.logOut();
+            this.currentUser = null;
+            window.location.reload();
         }
 
     }
