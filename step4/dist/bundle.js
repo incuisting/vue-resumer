@@ -79,6 +79,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var app = new _vue2.default({
     el: '#app',
     data: {
+        actionType: 'signUp',
         newTodo: '',
         todoList: []
     },

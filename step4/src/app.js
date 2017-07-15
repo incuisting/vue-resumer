@@ -2,6 +2,7 @@ import Vue from 'vue'
 var app = new Vue({
     el: '#app',
     data: {
+        actionType:'signUp',
         newTodo: '',
         todoList: []
     },
