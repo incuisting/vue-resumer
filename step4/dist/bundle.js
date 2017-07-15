@@ -308,6 +308,9 @@ var app = new _vue2.default({
 
         this.todoList = oldData || []; // 如果没有oldData则默认为空数组
         this.newTodo = todoInputData || ''; //为输入框添加上一次未提交的内容
+
+        this.currentUser = this.getCurrentUser();
+        console.log('current', this.currentUser);
     },
     methods: {
         addTodo: function addTodo() {
@@ -350,15 +353,22 @@ var app = new _vue2.default({
             });
         },
         getCurrentUser: function getCurrentUser() {
-            var _AV$User$current = _leancloudStorage2.default.User.current(),
-                id = _AV$User$current.id,
-                createAt = _AV$User$current.createAt,
-                username = _AV$User$current.attributes.username;
-            //使用了ES6的解构赋值
+            var current = _leancloudStorage2.default.User.current();
+
+            if (current) {
+                var _AV$User$current = _leancloudStorage2.default.User.current(),
+                    id = _AV$User$current.id,
+                    createAt = _AV$User$current.createAt,
+                    username = _AV$User$current.attributes.username;
+                //使用了ES6的解构赋值
 
 
-            return { id: id, username: username, createAt: createAt //
-            };
+                return { id: id, username: username, createAt: createAt //
+
+                };
+            } else {
+                return null;
+            }
         },
         logout: function logout() {
             _leancloudStorage2.default.User.logOut();

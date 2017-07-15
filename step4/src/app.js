@@ -36,6 +36,9 @@ var app = new Vue({
 
         this.todoList = oldData || [] // 如果没有oldData则默认为空数组
         this.newTodo = todoInputData || '' //为输入框添加上一次未提交的内容
+
+        this.currentUser = this.getCurrentUser()
+        console.log('current', this.currentUser)
     },
     methods: {
         addTodo: function() {
@@ -72,9 +75,16 @@ var app = new Vue({
             });
         },
         getCurrentUser: function() {
-            let { id, createAt, attributes: { username } } = AV.User.current()
-                //使用了ES6的解构赋值
-            return { id, username, createAt } //
+            let current = AV.User.current()
+
+            if (current) {
+                let { id, createAt, attributes: { username } } = AV.User.current()
+                    //使用了ES6的解构赋值
+                return { id, username, createAt } //
+
+            } else {
+                return null
+            }
         },
         logout: function() {
             AV.User.logOut()
