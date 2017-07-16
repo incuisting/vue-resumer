@@ -291,23 +291,20 @@ var app = new _vue2.default({
         currentUser: null
     },
     created: function created() {
-        var _this = this;
-
-        window.onbeforeunload = function () {
-            //当窗口即将被卸载时,会触发该事件
-            var dataString = JSON.stringify(_this.todoList);
-            var AVTodos = _leancloudStorage2.default.Object.extend('AllTodos');
-            var avTodos = new AVTodos();
-            avTodos.set('content', dataString);
-            avTodos.save().then(function (todo) {
-                console.log('succes');
-            }, function (error) {
-                console.log('error');
-            });
-            //let newTodoValue = JSON.stringify(this.newTodo)
-            //window.localStorage.setItem('myTodos', dataString) //存储输入款内容
-            //window.localStorage.setItem('todoInputValue', newTodoValue)
-        };
+        // window.onbeforeunload = () => { //当窗口即将被卸载时,会触发该事件
+        //let dataString = JSON.stringify(this.todoList)
+        //var AVTodos = AV.Object.extend('AllTodos')
+        //var avTodos = new AVTodos()
+        //avTodos.set('content', dataString)
+        //avTodos.save().then((todo) => {
+        //console.log('succes')
+        // }, (error) => {
+        //     console.log('error')
+        // })
+        //let newTodoValue = JSON.stringify(this.newTodo)
+        //window.localStorage.setItem('myTodos', dataString) //存储输入款内容
+        //window.localStorage.setItem('todoInputValue', newTodoValue)
+        // }
         //let todoInputValue = window.localStorage.getItem('todoInputValue')
         //let todoInputData = JSON.parse(todoInputValue) //输入框的数据
 
@@ -321,6 +318,17 @@ var app = new _vue2.default({
         console.log('current', this.currentUser);
     },
     methods: {
+        saveTodos: function saveTodos() {
+            var dataString = JSON.stringify(this.todoList);
+            var AVTodos = _leancloudStorage2.default.Object.extend('AllTodos');
+            var avTodos = new AVTodos();
+            avTodos.set('content', dataString);
+            avTodos.save().then(function (todo) {
+                console.log('succes');
+            }, function (error) {
+                console.log('error');
+            });
+        },
         addTodo: function addTodo() {
             this.todoList.push({ //this 被指向data
                 title: this.newTodo,
@@ -329,33 +337,35 @@ var app = new _vue2.default({
             });
             console.log(this.todoList);
             this.newTodo = ''; //变成空
+            this.saveTodos();
         },
         removeTodo: function removeTodo(todo) {
             var index = this.todoList.indexOf(todo);
             this.todoList.splice(index, 1);
+            this.saveTodos();
         },
         //TODO
         //在addTodo的时候就把时间的格式转化好
         //尝试createAt直接指向一个methods
         signUp: function signUp() {
-            var _this2 = this;
+            var _this = this;
 
             //注册
             var user = new _leancloudStorage2.default.User();
             user.setUsername(this.formData.username);
             user.setPassword(this.formData.password);
             user.signUp().then(function (loginedUser) {
-                _this2.currentUser = _this2.getCurrentUser();
+                _this.currentUser = _this.getCurrentUser();
             }, function (error) {
                 alert('注册失败');
             });
         },
         login: function login() {
-            var _this3 = this;
+            var _this2 = this;
 
             //登入
             _leancloudStorage2.default.User.logIn(this.formData.username, this.formData.password).then(function (loginedUser) {
-                _this3.currentUser = _this3.getCurrentUser();
+                _this2.currentUser = _this2.getCurrentUser();
             }, function (error) {
                 alert('注册成功');
             });

@@ -22,22 +22,22 @@ var app = new Vue({
         currentUser: null
     },
     created: function() {
-        window.onbeforeunload = () => { //当窗口即将被卸载时,会触发该事件
-                let dataString = JSON.stringify(this.todoList)
-                var AVTodos = AV.Object.extend('AllTodos')
-                var avTodos = new AVTodos()
-                avTodos.set('content', dataString)
-                avTodos.save().then((todo) => {
-                        console.log('succes')
-                    }, (error) => {
-                        console.log('error')
-                    })
-                    //let newTodoValue = JSON.stringify(this.newTodo)
-                    //window.localStorage.setItem('myTodos', dataString) //存储输入款内容
-                    //window.localStorage.setItem('todoInputValue', newTodoValue)
-            }
-            //let todoInputValue = window.localStorage.getItem('todoInputValue')
-            //let todoInputData = JSON.parse(todoInputValue) //输入框的数据
+        // window.onbeforeunload = () => { //当窗口即将被卸载时,会触发该事件
+        //let dataString = JSON.stringify(this.todoList)
+        //var AVTodos = AV.Object.extend('AllTodos')
+        //var avTodos = new AVTodos()
+        //avTodos.set('content', dataString)
+        //avTodos.save().then((todo) => {
+        //console.log('succes')
+        // }, (error) => {
+        //     console.log('error')
+        // })
+        //let newTodoValue = JSON.stringify(this.newTodo)
+        //window.localStorage.setItem('myTodos', dataString) //存储输入款内容
+        //window.localStorage.setItem('todoInputValue', newTodoValue)
+        // }
+        //let todoInputValue = window.localStorage.getItem('todoInputValue')
+        //let todoInputData = JSON.parse(todoInputValue) //输入框的数据
 
         //let oldDataString = window.localStorage.getItem('myTodos') //取出数据
         //let oldData = JSON.parse(oldDataString) //转化成JSON格式
@@ -49,6 +49,17 @@ var app = new Vue({
         console.log('current', this.currentUser)
     },
     methods: {
+        saveTodos: function() {
+            let dataString = JSON.stringify(this.todoList)
+            var AVTodos = AV.Object.extend('AllTodos')
+            var avTodos = new AVTodos()
+            avTodos.set('content', dataString)
+            avTodos.save().then((todo) => {
+                console.log('succes')
+            }, (error) => {
+                console.log('error')
+            })
+        },
         addTodo: function() {
             this.todoList.push({ //this 被指向data
                 title: this.newTodo,
@@ -57,10 +68,12 @@ var app = new Vue({
             })
             console.log(this.todoList)
             this.newTodo = '' //变成空
+            this.saveTodos()
         },
         removeTodo: function(todo) {
             let index = this.todoList.indexOf(todo)
             this.todoList.splice(index, 1)
+            this.saveTodos()
         },
         //TODO
         //在addTodo的时候就把时间的格式转化好
