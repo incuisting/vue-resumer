@@ -125,8 +125,8 @@ var app = new Vue({
             user.setUsername(this.formData.username);
             user.setPassword(this.formData.password);
             user.signUp().then((loginedUser) => {
-                console.log('loginedUser', loginedUser)
-                this.actionType = 'login'
+
+                this.actionType = 'login' //注册成功把界面切换成登入界面
                     // this.currentUser = this.getCurrentUser()
                     // console.log('signUpcurrent', this.currentUser)
             }, (error) => {

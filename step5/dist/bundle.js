@@ -398,8 +398,8 @@ var app = new _vue2.default({
             user.setUsername(this.formData.username);
             user.setPassword(this.formData.password);
             user.signUp().then(function (loginedUser) {
-                console.log('loginedUser', loginedUser);
-                _this2.actionType = 'login';
+
+                _this2.actionType = 'login'; //注册成功把界面切换成登入界面
                 // this.currentUser = this.getCurrentUser()
                 // console.log('signUpcurrent', this.currentUser)
             }, function (error) {
