@@ -45,20 +45,40 @@ var app = new Vue({
         //this.todoList = oldData || [] // 如果没有oldData则默认为空数组
         //this.newTodo = todoInputData || '' //为输入框添加上一次未提交的内容
 
-        this.currentUser = this.getCurrentUser()
+        this.currentUser = this.getCurrentUser() //获取用户状态
         console.log('current', this.currentUser)
-        if (this.currentUser) {
-            var query = new AV.Query('AllTodos');
-            query.find()
-                .then(function(todos) {
-                    console.log(todos)
-                }, function(error) {
-                    console.error(error)
-                })
-        }
+        this.fetchTodos()
 
     },
     methods: {
+        fetchTodos: function() {
+            if (this.currentUser) {
+                var query = new AV.Query('AllTodos');
+                query.find()
+                    .then(function(todos) {
+                        console.log('todos', todos)
+                        let avAllTodos = todos[0] //因为理论上 AllTodos 只有一个，所以我们取结果的第一项
+                        console.log('avAllTodos', avAllTodos)
+                        let id = avAllTodos.id
+                        this.todoList = JSON.parse(avAllTodos.attributes.content) // 为什么有个 attributes？因为我从控制台看到的
+                        this.todoList.id = id // 为什么给 todoList 这个数组设置 id？因为数组也是对象啊
+                        console.log('todoList', this.todoList)
+                    }.bind(this), function(error) { //this如果不用bind的话会是undefined。。
+                        console.error(error)
+                    })
+            }
+        },
+        updateTodos: function() {
+            let dataString = JSON.stringify(this.todoList)
+                // 第一个参数是 className，第二个参数是 objectId
+            let avTodos = AV.Object.createWithoutData('AllTodos', this.todoList.id)
+                // 修改属性
+            avTodos.set('content', dataString)
+                // 保存到云端,然后一个回调函数
+            avTodos.save().then(() => {
+                console.log('更新成功')
+            })
+        },
         saveTodos: function() {
             let dataString = JSON.stringify(this.todoList)
             var AVTodos = AV.Object.extend('AllTodos')
@@ -69,10 +89,18 @@ var app = new Vue({
             avTodos.set('content', dataString)
             avTodos.setACL(acl) //设置访问控制
             avTodos.save().then((todo) => {
-                console.log('succes')
+                this.todoList.id = todo.id //把id挂到this.todolist上，否则下次就不会调用updateTodos
+                console.log('保存成功')
             }, (error) => {
-                console.log('error')
+                console.log('保存失败')
             })
+        },
+        saveOrUpdateTodos: function() {
+            if (this.todoList.id) {
+                this.updateTodos()
+            } else {
+                this.saveTodos()
+            }
         },
         addTodo: function() {
             this.todoList.push({ //this 被指向data
@@ -82,12 +110,12 @@ var app = new Vue({
             })
             console.log(this.todoList)
             this.newTodo = '' //变成空
-            this.saveTodos()
+            this.saveOrUpdateTodos()
         },
         removeTodo: function(todo) {
             let index = this.todoList.indexOf(todo)
             this.todoList.splice(index, 1)
-            this.saveTodos()
+            this.saveOrUpdateTodos()
         },
         //TODO
         //在addTodo的时候就把时间的格式转化好
@@ -98,6 +126,7 @@ var app = new Vue({
             user.setPassword(this.formData.password);
             user.signUp().then((loginedUser) => {
                 this.currentUser = this.getCurrentUser()
+                console.log('signUpcurrent', this.currentUser)
             }, (error) => {
                 alert('注册失败')
             });
@@ -105,8 +134,9 @@ var app = new Vue({
         login: function() { //登入
             AV.User.logIn(this.formData.username, this.formData.password).then((loginedUser) => {
                 this.currentUser = this.getCurrentUser()
+                this.fetchTodos()
             }, (error) => {
-                alert('注册成功')
+                alert('登陆失败')
             });
         },
         getCurrentUser: function() {
