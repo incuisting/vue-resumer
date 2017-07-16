@@ -125,8 +125,10 @@ var app = new Vue({
             user.setUsername(this.formData.username);
             user.setPassword(this.formData.password);
             user.signUp().then((loginedUser) => {
-                this.currentUser = this.getCurrentUser()
-                console.log('signUpcurrent', this.currentUser)
+                console.log('loginedUser', loginedUser)
+                this.actionType = 'login'
+                    // this.currentUser = this.getCurrentUser()
+                    // console.log('signUpcurrent', this.currentUser)
             }, (error) => {
                 alert('注册失败')
             });
