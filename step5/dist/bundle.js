@@ -316,6 +316,14 @@ var app = new _vue2.default({
 
         this.currentUser = this.getCurrentUser();
         console.log('current', this.currentUser);
+        if (this.currentUser) {
+            var query = new _leancloudStorage2.default.Query('AllTodos');
+            query.find().then(function (todos) {
+                console.log(todos);
+            }, function (error) {
+                console.error(error);
+            });
+        }
     },
     methods: {
         saveTodos: function saveTodos() {
