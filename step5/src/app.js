@@ -23,19 +23,27 @@ var app = new Vue({
     },
     created: function() {
         window.onbeforeunload = () => { //当窗口即将被卸载时,会触发该事件
-            let dataString = JSON.stringify(this.todoList)
-            let newTodoValue = JSON.stringify(this.newTodo)
-            window.localStorage.setItem('myTodos', dataString) //存储输入款内容
-            window.localStorage.setItem('todoInputValue', newTodoValue)
-        }
-        let todoInputValue = window.localStorage.getItem('todoInputValue')
-        let todoInputData = JSON.parse(todoInputValue) //输入框的数据
+                let dataString = JSON.stringify(this.todoList)
+                var AVTodos = AV.Object.extend('AllTodos')
+                var avTodos = new AVTodos()
+                avTodos.set('content', dataString)
+                avTodos.save().then((todo) => {
+                        console.log('succes')
+                    }, (error) => {
+                        console.log('error')
+                    })
+                    //let newTodoValue = JSON.stringify(this.newTodo)
+                    //window.localStorage.setItem('myTodos', dataString) //存储输入款内容
+                    //window.localStorage.setItem('todoInputValue', newTodoValue)
+            }
+            //let todoInputValue = window.localStorage.getItem('todoInputValue')
+            //let todoInputData = JSON.parse(todoInputValue) //输入框的数据
 
-        let oldDataString = window.localStorage.getItem('myTodos') //取出数据
-        let oldData = JSON.parse(oldDataString) //转化成JSON格式
+        //let oldDataString = window.localStorage.getItem('myTodos') //取出数据
+        //let oldData = JSON.parse(oldDataString) //转化成JSON格式
 
-        this.todoList = oldData || [] // 如果没有oldData则默认为空数组
-        this.newTodo = todoInputData || '' //为输入框添加上一次未提交的内容
+        //this.todoList = oldData || [] // 如果没有oldData则默认为空数组
+        //this.newTodo = todoInputData || '' //为输入框添加上一次未提交的内容
 
         this.currentUser = this.getCurrentUser()
         console.log('current', this.currentUser)
